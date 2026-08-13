@@ -296,6 +296,7 @@ input,textarea,select{
 </div>
 
 <script>
+const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYzlmNWIwNTZjNjc2YjA3OGIxYTIzNzBjNjdmYTU4YSIsIm5iZiI6MTc4NjY2MzI5Ny4xNzkwMDAxLCJzdWIiOiI2YTdlNTE4MTIwMTVmMjM5ODQyZDI4ZmQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Hbj-EE5Jh1Hkweaudyi39UmBiZ27-Tjdjg3f9kaERXo';
 let entries = [];
 let currentType = 'book';
 let selectedCover = '';
@@ -448,12 +449,14 @@ async function doSearch(){
           cover: d.artworkUrl100 ? d.artworkUrl100.replace('100x100','400x400') : ''
         }));
     } else if(currentType === 'film'){
-      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=movie&entity=movie&limit=10`);
+      const r = await fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(q)}&include_adult=false`, {
+        headers: { 'Authorization': `Bearer ${TMDB_TOKEN}`, 'accept': 'application/json' }
+      });
       const data = await r.json();
       items = (data.results||[]).map(d => ({
-        title: d.trackName,
-        subtitle: d.releaseDate ? d.releaseDate.slice(0,4) : '',
-        cover: d.artworkUrl100 ? d.artworkUrl100.replace('100x100','400x400') : ''
+        title: d.title,
+        subtitle: d.release_date ? d.release_date.slice(0,4) : '',
+        cover: d.poster_path ? `https://image.tmdb.org/t/p/w300${d.poster_path}` : ''
       }));
     }
 
