@@ -438,19 +438,21 @@ async function doSearch(){
         cover: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : ''
       }));
     } else if(currentType === 'album'){
-      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=album&limit=8`);
+      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&entity=album&attribute=albumTerm&limit=10`);
       const data = await r.json();
-      items = (data.results||[]).map(d => ({
-        title: d.collectionName,
-        subtitle: d.artistName,
-        cover: d.artworkUrl100 ? d.artworkUrl100.replace('100x100','400x400') : ''
-      }));
+      items = (data.results||[])
+        .filter(d => d.collectionType === 'Album')
+        .map(d => ({
+          title: d.collectionName,
+          subtitle: d.artistName,
+          cover: d.artworkUrl100 ? d.artworkUrl100.replace('100x100','400x400') : ''
+        }));
     } else if(currentType === 'film'){
-      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=movie&limit=8`);
+      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=movie&entity=movie&limit=10`);
       const data = await r.json();
       items = (data.results||[]).map(d => ({
         title: d.trackName,
-        subtitle: d.artistName || (d.releaseDate ? d.releaseDate.slice(0,4) : ''),
+        subtitle: d.releaseDate ? d.releaseDate.slice(0,4) : '',
         cover: d.artworkUrl100 ? d.artworkUrl100.replace('100x100','400x400') : ''
       }));
     }
