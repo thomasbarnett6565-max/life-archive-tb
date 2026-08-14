@@ -244,6 +244,43 @@ input,textarea,select{
   .month-tab{padding:8px 16px;white-space:nowrap;}
   .main{padding:24px 18px;}
 }
+
+/* ---------- Wrapped ---------- */
+.wrapped-modal{
+  background:linear-gradient(180deg,var(--cream),var(--cream-2));
+  width:100%;max-width:560px;max-height:90vh;overflow-y:auto;
+  border-radius:6px;border:4px double var(--gold);box-shadow:0 24px 60px rgba(0,0,0,0.45);
+  padding:38px 32px 30px;position:relative;text-align:center;
+}
+.wrapped-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:24px;color:var(--wood);cursor:pointer;line-height:1;}
+.wrapped-nav{display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:8px;}
+.wrapped-nav button{background:none;border:1px solid var(--gold);color:var(--wood);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:12px;}
+.wrapped-nav button:disabled{opacity:0.2;cursor:default;}
+.wrapped-crest{width:44px;height:44px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:14px;color:var(--green-deep);}
+.wrapped-year{font-family:'Fraunces',serif;font-weight:700;font-size:54px;margin:8px 0 0;color:var(--green-deep);letter-spacing:1px;}
+.wrapped-sub{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:3px;text-transform:uppercase;color:var(--wood);margin:2px 0 24px;}
+.wrapped-total{font-family:'Fraunces',serif;font-weight:600;font-size:42px;color:var(--gold);margin-bottom:2px;line-height:1;}
+.wrapped-total span{display:block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--wood);margin-top:4px;}
+.wrapped-types{display:flex;justify-content:center;gap:24px;margin:24px 0;flex-wrap:wrap;}
+.wrapped-type{display:flex;flex-direction:column;align-items:center;}
+.wrapped-type .n{font-family:'Fraunces',serif;font-weight:600;font-size:27px;color:var(--green-deep);}
+.wrapped-type .l{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--wood);}
+.wrapped-line{font-size:12.5px;color:var(--wood);margin-bottom:20px;}
+.wrapped-line strong{color:var(--ink);}
+.wrapped-chart{display:flex;justify-content:center;align-items:flex-end;gap:7px;height:76px;margin:16px 0 26px;padding:0 4px;}
+.bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+.bar{width:12px;background:linear-gradient(180deg,var(--gold-bright),var(--gold));border-radius:2px 2px 0 0;min-height:2px;}
+.bar-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--wood);margin-top:4px;}
+.wrapped-h3{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--green-deep);margin:0 0 14px;border-top:1px dashed rgba(90,58,38,0.35);padding-top:20px;}
+.wrapped-top-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.wrapped-top-item{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.wrapped-top-item img,.wrapped-top-noimg{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:3px;background:var(--green-soft);}
+.wrapped-top-item span{font-size:9.5px;color:var(--ink);line-height:1.25;}
+.wrapped-empty{padding:20px 0;color:var(--wood);font-style:italic;font-family:'Fraunces',serif;}
+@media (max-width:640px){
+  .wrapped-top-grid{grid-template-columns:repeat(3,1fr);}
+  .wrapped-year{font-size:42px;}
+}
 </style>
 </head>
 <body>
@@ -257,6 +294,7 @@ input,textarea,select{
     </div>
   </div>
   <div class="topbar-actions">
+    <button class="icon-btn" onclick="openWrapped()" title="Your year in review">Wrapped</button>
     <button class="icon-btn" onclick="exportData()" title="Download a backup file">Export</button>
     <button class="icon-btn" onclick="document.getElementById('importInput').click()" title="Restore from a backup file">Import</button>
     <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importData(event)" />
@@ -332,8 +370,17 @@ input,textarea,select{
   </div>
 </div>
 
+<div class="overlay" id="wrappedOverlay">
+  <div class="wrapped-modal">
+    <button class="wrapped-close" onclick="closeWrapped()">&times;</button>
+    <div id="wrappedContent"></div>
+  </div>
+</div>
+
 <script>
 const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYzlmNWIwNTZjNjc2YjA3OGIxYTIzNzBjNjdmYTU4YSIsIm5iZiI6MTc4NjY2MzI5Ny4xNzkwMDAxLCJzdWIiOiI2YTdlNTE4MTIwMTVmMjM5ODQyZDI4ZmQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Hbj-EE5Jh1Hkweaudyi39UmBiZ27-Tjdjg3f9kaERXo';
+const DISCOGS_TOKEN = 'qKwdCkumFuEduPNhpGnLDCWbleCZgZoNDlAwTZdq';
+const DISCOGS_TOKEN = 'qKwdCkumFuEduPNhpGnLDCWbleCZgZoNDlAwTZdq';
 let entries = [];
 let currentType = 'book';
 let selectedCover = '';
@@ -547,6 +594,43 @@ function renderStars(){
 }
 renderStars();
 
+async function searchAlbumsDiscogs(q){
+  const r = await fetch(`https://api.discogs.com/database/search?q=${encodeURIComponent(q)}&type=release&per_page=10&token=${DISCOGS_TOKEN}`);
+  if(!r.ok) throw new Error('discogs http ' + r.status);
+  const data = await r.json();
+  return (data.results||[]).map(d => {
+    const parts = (d.title||'').split(' - ');
+    return {
+      title: parts.length > 1 ? parts.slice(1).join(' - ') : d.title,
+      subtitle: parts.length > 1 ? parts[0] : (d.year ? String(d.year) : ''),
+      cover: d.cover_image || d.thumb || ''
+    };
+  }).filter(x => x.cover);
+}
+
+async function searchAlbumsItunes(q){
+  const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&entity=album&attribute=albumTerm&limit=10`);
+  const data = await r.json();
+  return (data.results||[])
+    .filter(d => d.collectionType === 'Album')
+    .map(d => ({
+      title: d.collectionName,
+      subtitle: d.artistName,
+      cover: d.artworkUrl100 ? d.artworkUrl100.replace('100x100','400x400') : ''
+    }));
+}
+
+/* Discogs has better cover art but flaky CORS — try it first, fall back to iTunes silently on failure or empty results */
+async function searchAlbums(q){
+  try{
+    const discogsResults = await searchAlbumsDiscogs(q);
+    if(discogsResults.length > 0) return discogsResults;
+  }catch(err){ /* fall through to iTunes */ }
+  try{
+    return await searchAlbumsItunes(q);
+  }catch(err){ return []; }
+}
+
 async function doSearch(){
   const q = document.getElementById('searchInput').value.trim();
   if(!q) return;
@@ -565,15 +649,7 @@ async function doSearch(){
         cover: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : ''
       }));
     } else if(currentType === 'album'){
-      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&entity=album&attribute=albumTerm&limit=10`);
-      const data = await r.json();
-      items = (data.results||[])
-        .filter(d => d.collectionType === 'Album')
-        .map(d => ({
-          title: d.collectionName,
-          subtitle: d.artistName,
-          cover: d.artworkUrl100 ? d.artworkUrl100.replace('100x100','400x400') : ''
-        }));
+      items = await searchAlbums(q);
     } else if(currentType === 'film'){
       const r = await fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(q)}&include_adult=false`, {
         headers: { 'Authorization': `Bearer ${TMDB_TOKEN}`, 'accept': 'application/json' }
@@ -680,6 +756,98 @@ function saveEntry(){
   editingId = null;
   closeModal();
   render();
+}
+
+/* ---------- Wrapped: year in review ---------- */
+let wrappedYear = null;
+
+function getArchiveYears(){
+  const years = new Set(entries.map(e => e.month.slice(0,4)));
+  return Array.from(years).sort().reverse();
+}
+
+function openWrapped(){
+  const years = getArchiveYears();
+  if(years.length === 0){
+    alert('Log a few entries first — then come back for your Wrapped.');
+    return;
+  }
+  wrappedYear = years.includes(activeMonth ? activeMonth.slice(0,4) : '') ? activeMonth.slice(0,4) : years[0];
+  renderWrapped();
+  document.getElementById('wrappedOverlay').classList.add('open');
+}
+function closeWrapped(){ document.getElementById('wrappedOverlay').classList.remove('open'); }
+
+function changeWrappedYear(dir){
+  const years = getArchiveYears();
+  const idx = years.indexOf(wrappedYear);
+  const newIdx = idx - dir;
+  if(newIdx >= 0 && newIdx < years.length){ wrappedYear = years[newIdx]; renderWrapped(); }
+}
+
+function renderWrapped(){
+  const years = getArchiveYears();
+  const idx = years.indexOf(wrappedYear);
+  const yearEntries = entries.filter(e => e.month.startsWith(wrappedYear));
+
+  const byType = { book:0, album:0, film:0, photo:0 };
+  const byMonth = {};
+  yearEntries.forEach(e => {
+    byType[e.type] = (byType[e.type]||0) + 1;
+    byMonth[e.month] = (byMonth[e.month]||0) + 1;
+  });
+
+  const busiestKey = Object.keys(byMonth).sort((a,b) => byMonth[b]-byMonth[a])[0];
+  const topRated = yearEntries.filter(e => e.rating === 5);
+
+  const monthBars = Array.from({length:12}, (_,i) => {
+    const key = wrappedYear + '-' + String(i+1).padStart(2,'0');
+    return { label: MONTH_NAMES[i].slice(0,3), count: byMonth[key]||0 };
+  });
+  const maxCount = Math.max(1, ...monthBars.map(m => m.count));
+
+  const el = document.getElementById('wrappedContent');
+  if(yearEntries.length === 0){
+    el.innerHTML = `
+      <div class="wrapped-nav">
+        <button onclick="changeWrappedYear(1)" ${idx>=years.length-1?'disabled':''}>&larr;</button>
+        <div class="wrapped-crest">TA</div>
+        <button onclick="changeWrappedYear(-1)" ${idx<=0?'disabled':''}>&rarr;</button>
+      </div>
+      <h2 class="wrapped-year">${wrappedYear}</h2>
+      <div class="wrapped-empty">Nothing archived this year.</div>
+    `;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="wrapped-nav">
+      <button onclick="changeWrappedYear(1)" ${idx>=years.length-1?'disabled':''}>&larr;</button>
+      <div class="wrapped-crest">TA</div>
+      <button onclick="changeWrappedYear(-1)" ${idx<=0?'disabled':''}>&rarr;</button>
+    </div>
+    <h2 class="wrapped-year">${wrappedYear}</h2>
+    <p class="wrapped-sub">Your Year, Archived</p>
+    <div class="wrapped-total">${yearEntries.length}<span>entries logged</span></div>
+    <div class="wrapped-types">
+      ${['book','album','film','photo'].map(t => `<div class="wrapped-type"><span class="n">${byType[t]||0}</span><span class="l">${t}s</span></div>`).join('')}
+    </div>
+    ${busiestKey ? `<p class="wrapped-line">Busiest month: <strong>${monthLabel(busiestKey)}</strong> — ${byMonth[busiestKey]} entr${byMonth[busiestKey]===1?'y':'ies'}</p>` : ''}
+    <div class="wrapped-chart">
+      ${monthBars.map(m => `<div class="bar-col"><div class="bar" style="height:${m.count ? (m.count/maxCount*60) : 2}px" title="${m.label}: ${m.count}"></div><span class="bar-label">${m.label}</span></div>`).join('')}
+    </div>
+    ${topRated.length ? `
+      <h3 class="wrapped-h3">Five Stars</h3>
+      <div class="wrapped-top-grid">
+        ${topRated.slice(0,8).map(e => `
+          <div class="wrapped-top-item">
+            ${e.cover ? `<img src="${e.cover}"/>` : `<div class="wrapped-top-noimg"></div>`}
+            <span>${escapeHtml(e.title)}</span>
+          </div>
+        `).join('')}
+      </div>
+    ` : ''}
+  `;
 }
 
 document.getElementById('overlay').addEventListener('click', (e) => {
