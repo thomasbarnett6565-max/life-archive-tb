@@ -40,6 +40,8 @@ body{
   justify-content:space-between;
   border-bottom:4px solid var(--gold);
   box-shadow:0 4px 14px rgba(0,0,0,0.25);
+  flex-wrap:wrap;
+  gap:12px;
 }
 .brand{display:flex;align-items:center;gap:14px;}
 .crest{
@@ -49,6 +51,7 @@ body{
   font-family:'Fraunces',serif;font-weight:700;font-size:16px;
   color:var(--gold-bright);
   background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.08), transparent 60%);
+  flex-shrink:0;
 }
 .brand h1{
   font-family:'Fraunces',serif;font-weight:600;font-size:24px;letter-spacing:0.5px;margin:0;
@@ -64,6 +67,13 @@ body{
   transition:all .15s ease;
 }
 .new-entry-btn:hover{background:var(--gold-bright);transform:translateY(-1px);}
+.topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.icon-btn{
+  background:transparent;color:var(--gold-bright);border:1px solid rgba(198,161,91,0.5);
+  font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:11px;letter-spacing:1px;
+  text-transform:uppercase;padding:11px 16px;border-radius:2px;cursor:pointer;transition:all .15s ease;
+}
+.icon-btn:hover{background:rgba(198,161,91,0.12);border-color:var(--gold);}
 
 /* ---------- Layout ---------- */
 .layout{display:flex;max-width:1200px;margin:0 auto;min-height:calc(100vh - 86px);}
@@ -93,9 +103,9 @@ body{
 }
 
 /* ---------- Main ---------- */
-.main{flex:1;padding:36px 40px;}
+.main{flex:1;padding:36px 40px;min-width:0;}
 .month-header{
-  display:flex;align-items:baseline;gap:16px;margin-bottom:28px;
+  display:flex;align-items:baseline;gap:16px;margin-bottom:10px;
   border-bottom:2px solid var(--wood);padding-bottom:16px;
 }
 .month-header h2{
@@ -104,6 +114,9 @@ body{
 .month-header .sub{
   font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;
   text-transform:uppercase;color:var(--wood);
+}
+.hint{
+  font-size:11px;color:var(--wood);opacity:0.7;margin:0 0 22px;font-style:italic;
 }
 
 .empty-state{
@@ -116,20 +129,32 @@ body{
 }
 .card{
   background:var(--cream-2);border:1px solid rgba(90,58,38,0.25);
-  border-radius:3px;overflow:hidden;position:relative;
-  box-shadow:0 3px 8px rgba(0,0,0,0.08);transition:transform .15s ease, box-shadow .15s ease;
+  border-radius:3px;overflow:hidden;position:relative;cursor:grab;
+  box-shadow:0 3px 8px rgba(0,0,0,0.08);transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
 }
 .card:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,0.15);}
-.card .cover{
-  width:100%;aspect-ratio:1/1;object-fit:cover;display:block;
-  background:linear-gradient(135deg,var(--green-soft),var(--green-deep));
-}
-.card .cover.book{aspect-ratio:2/3;}
+.card.dragging{opacity:0.35;cursor:grabbing;}
+.card.drop-target{outline:2px dashed var(--gold);outline-offset:-2px;}
+.cover-wrap{width:100%;aspect-ratio:1/1;overflow:hidden;position:relative;background:linear-gradient(135deg,var(--green-soft),var(--green-deep));}
+.card .cover{width:100%;height:100%;object-fit:cover;display:block;}
+.card.photo .cover{filter:sepia(0.12) contrast(1.03);}
 .type-flag{
   position:absolute;top:8px;left:8px;background:var(--green-deep);color:var(--gold-bright);
   font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;
-  padding:3px 7px;border-radius:2px;border:1px solid var(--gold);
+  padding:3px 7px;border-radius:2px;border:1px solid var(--gold);z-index:1;
 }
+.card-controls{
+  position:absolute;top:8px;right:8px;display:flex;gap:6px;
+  opacity:0;transition:opacity .15s ease;z-index:2;
+}
+.card:hover .card-controls{opacity:1;}
+.card-btn{
+  width:26px;height:26px;border-radius:50%;background:rgba(31,51,41,0.88);
+  color:var(--gold-bright);border:1px solid var(--gold);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;font-size:12px;padding:0;line-height:1;
+}
+.card-btn:hover{background:var(--green-deep);}
+.card-btn.delete:hover{background:#7a2e22;border-color:#c0574a;}
 .card .info{padding:12px 12px 14px;}
 .card .title{
   font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;line-height:1.25;
@@ -143,7 +168,6 @@ body{
   font-size:11px;color:#5c5142;margin-top:6px;line-height:1.4;
   border-top:1px dashed rgba(90,58,38,0.3);padding-top:6px;
 }
-.card.photo .cover{object-fit:cover;filter:sepia(0.12) contrast(1.03);}
 
 /* ---------- Modal ---------- */
 .overlay{
@@ -192,10 +216,10 @@ input,textarea,select{
 .result-item .r-sub{font-size:11px;color:var(--wood);}
 
 .selected-preview{
-  display:flex;gap:12px;background:var(--cream-2);padding:10px;border-radius:3px;margin-bottom:14px;
+  display:flex;gap:12px;align-items:center;background:var(--cream-2);padding:10px;border-radius:3px;margin-bottom:14px;
   border:1px solid var(--gold);
 }
-.selected-preview img{width:52px;height:52px;object-fit:cover;border-radius:2px;}
+.selected-preview img{width:52px;height:52px;object-fit:cover;border-radius:2px;flex-shrink:0;}
 
 .field{margin-bottom:12px;}
 .field label{
@@ -213,6 +237,13 @@ input,textarea,select{
 .save-btn:hover{background:var(--green);}
 .save-btn:disabled{opacity:0.4;cursor:not-allowed;}
 .loading-txt{font-size:11px;color:var(--wood);font-style:italic;padding:8px 0;}
+
+@media (max-width:640px){
+  .layout{flex-direction:column;}
+  .sidebar{width:100%;display:flex;overflow-x:auto;padding:12px;}
+  .month-tab{padding:8px 16px;white-space:nowrap;}
+  .main{padding:24px 18px;}
+}
 </style>
 </head>
 <body>
@@ -225,7 +256,12 @@ input,textarea,select{
       <span>Est. 2026 &middot; A Record of Consumption</span>
     </div>
   </div>
-  <button class="new-entry-btn" onclick="openModal()">+ New Entry</button>
+  <div class="topbar-actions">
+    <button class="icon-btn" onclick="exportData()" title="Download a backup file">Export</button>
+    <button class="icon-btn" onclick="document.getElementById('importInput').click()" title="Restore from a backup file">Import</button>
+    <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importData(event)" />
+    <button class="new-entry-btn" onclick="openModal()">+ New Entry</button>
+  </div>
 </div>
 
 <div class="layout">
@@ -235,6 +271,7 @@ input,textarea,select{
       <h2 id="monthTitle">—</h2>
       <span class="sub" id="monthSub">0 entries</span>
     </div>
+    <p class="hint" id="dragHint">Drag a card to reorder it. Hover a card for edit / delete.</p>
     <div id="entryArea"></div>
   </div>
 </div>
@@ -242,7 +279,7 @@ input,textarea,select{
 <div class="overlay" id="overlay">
   <div class="modal">
     <div class="modal-head">
-      <h3>Log a New Entry</h3>
+      <h3 id="modalTitle">Log a New Entry</h3>
       <button onclick="closeModal()">&times;</button>
     </div>
     <div class="modal-body">
@@ -290,7 +327,7 @@ input,textarea,select{
         <label>Notes</label>
         <textarea id="fieldNotes" rows="3" placeholder="A line or two..."></textarea>
       </div>
-      <button class="save-btn" onclick="saveEntry()">Add to Archive</button>
+      <button class="save-btn" onclick="saveEntry()"><span id="saveBtnLabel">Add to Archive</span></button>
     </div>
   </div>
 </div>
@@ -302,6 +339,8 @@ let currentType = 'book';
 let selectedCover = '';
 let currentRating = 0;
 let activeMonth = null;
+let editingId = null;
+let dragSrcId = null;
 const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
 function monthKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
@@ -353,6 +392,7 @@ function renderMain(){
   document.getElementById('monthTitle').textContent = monthLabel(activeMonth);
   const monthEntries = entries.filter(e => e.month === activeMonth);
   document.getElementById('monthSub').textContent = monthEntries.length + ' entr' + (monthEntries.length===1?'y':'ies') + ' logged';
+  document.getElementById('dragHint').style.display = monthEntries.length > 1 ? 'block' : 'none';
 
   const area = document.getElementById('entryArea');
   if(monthEntries.length === 0){
@@ -360,9 +400,15 @@ function renderMain(){
     return;
   }
   area.innerHTML = `<div class="entry-grid">` + monthEntries.map(e => `
-    <div class="card ${e.type}">
+    <div class="card ${e.type}" draggable="true" data-id="${e.id}">
       <div class="type-flag">${e.type}</div>
-      ${e.cover ? `<img class="cover ${e.type==='book'?'book':''}" src="${e.cover}" />` : `<div class="cover ${e.type==='book'?'book':''}"></div>`}
+      <div class="card-controls">
+        <button class="card-btn edit" onclick="event.stopPropagation(); editEntry('${e.id}')" title="Edit">&#9998;</button>
+        <button class="card-btn delete" onclick="event.stopPropagation(); deleteEntry('${e.id}')" title="Delete">&#128465;</button>
+      </div>
+      <div class="cover-wrap">
+        ${e.cover ? `<img class="cover" src="${e.cover}" />` : `<div class="cover"></div>`}
+      </div>
       <div class="info">
         <p class="title">${escapeHtml(e.title)}</p>
         ${e.subtitle ? `<p class="subtitle">${escapeHtml(e.subtitle)}</p>` : ''}
@@ -377,13 +423,93 @@ function escapeHtml(s){
   const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML;
 }
 
+/* ---------- Drag to reorder ---------- */
+document.addEventListener('dragstart', (e) => {
+  const card = e.target.closest('.card');
+  if(!card) return;
+  dragSrcId = card.dataset.id;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => card.classList.add('dragging'), 0);
+});
+document.addEventListener('dragend', (e) => {
+  const card = e.target.closest('.card');
+  if(card) card.classList.remove('dragging');
+  document.querySelectorAll('.drop-target').forEach(c => c.classList.remove('drop-target'));
+});
+document.addEventListener('dragover', (e) => {
+  const card = e.target.closest('.card');
+  if(!card) return;
+  e.preventDefault();
+  document.querySelectorAll('.drop-target').forEach(c => c.classList.remove('drop-target'));
+  if(card.dataset.id !== dragSrcId) card.classList.add('drop-target');
+});
+document.addEventListener('drop', (e) => {
+  const card = e.target.closest('.card');
+  if(!card) return;
+  e.preventDefault();
+  card.classList.remove('drop-target');
+  const targetId = card.dataset.id;
+  if(!dragSrcId || dragSrcId === targetId) return;
+  const srcIdx = entries.findIndex(x => x.id === dragSrcId);
+  if(srcIdx === -1) return;
+  const [moved] = entries.splice(srcIdx, 1);
+  const targetIdx = entries.findIndex(x => x.id === targetId);
+  entries.splice(targetIdx, 0, moved);
+  persist();
+  render();
+});
+
 /* ---------- Modal ---------- */
 function openModal(){
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Log a New Entry';
+  document.getElementById('saveBtnLabel').textContent = 'Add to Archive';
   document.getElementById('overlay').classList.add('open');
   document.getElementById('fieldMonth').value = activeMonth;
   resetSelection();
 }
-function closeModal(){ document.getElementById('overlay').classList.remove('open'); }
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  editingId = null;
+}
+
+function editEntry(id){
+  const entry = entries.find(e => e.id === id);
+  if(!entry) return;
+  editingId = id;
+  currentType = entry.type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === entry.type));
+  document.getElementById('searchSection').style.display = entry.type === 'photo' ? 'none' : 'block';
+  document.getElementById('photoSection').style.display = entry.type === 'photo' ? 'block' : 'none';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('fieldTitle').value = entry.title || '';
+  document.getElementById('fieldSubtitle').value = entry.subtitle || '';
+  document.getElementById('fieldMonth').value = entry.month;
+  document.getElementById('fieldNotes').value = entry.notes || '';
+  currentRating = entry.rating || 0;
+  renderStars();
+  selectedCover = entry.cover || '';
+  const preview = document.getElementById('selectedPreview');
+  if(selectedCover){
+    preview.style.display = 'flex';
+    preview.innerHTML = `<img src="${selectedCover}"/><div><strong>${escapeHtml(entry.title||'')}</strong></div>`;
+  } else {
+    preview.style.display = 'none';
+  }
+  document.getElementById('modalTitle').textContent = 'Edit Entry';
+  document.getElementById('saveBtnLabel').textContent = 'Save Changes';
+  document.getElementById('overlay').classList.add('open');
+}
+
+function deleteEntry(id){
+  const entry = entries.find(e => e.id === id);
+  if(!entry) return;
+  if(!confirm(`Delete "${entry.title}"? This can't be undone.`)) return;
+  entries = entries.filter(e => e.id !== id);
+  persist();
+  render();
+}
 
 document.getElementById('typePicker').addEventListener('click', (e) => {
   const btn = e.target.closest('.type-btn');
@@ -487,27 +613,52 @@ function pickResult(item){
   preview.innerHTML = (item.cover ? `<img src="${item.cover}"/>` : '') + `<div><strong>${escapeHtml(item.title||'')}</strong><br><span style="font-size:11px;color:var(--wood);">${escapeHtml(item.subtitle||'')}</span></div>`;
 }
 
-function handlePhotoUpload(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    selectedCover = ev.target.result;
-    const preview = document.getElementById('selectedPreview');
-    preview.style.display = 'flex';
-    preview.innerHTML = `<img src="${selectedCover}"/><div><strong>Photo attached</strong></div>`;
-    if(!document.getElementById('fieldTitle').value) document.getElementById('fieldTitle').value = file.name.replace(/\.[^/.]+$/,'');
-  };
-  reader.readAsDataURL(file);
+/* Resize/compress an uploaded photo before storing so it doesn't dominate the grid or bloat storage */
+function resizeImage(file, maxDim, quality){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if(width > height){ if(width > maxDim){ height = height * (maxDim / width); width = maxDim; } }
+        else { if(height > maxDim){ width = width * (maxDim / height); height = maxDim; } }
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(width);
+        canvas.height = Math.round(height);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = ev.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
-async function saveEntry(){
+async function handlePhotoUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const preview = document.getElementById('selectedPreview');
+  preview.style.display = 'flex';
+  preview.innerHTML = `<div class="loading-txt">Processing photo...</div>`;
+  try{
+    selectedCover = await resizeImage(file, 1000, 0.82);
+    preview.innerHTML = `<img src="${selectedCover}"/><div><strong>Photo attached</strong></div>`;
+    if(!document.getElementById('fieldTitle').value) document.getElementById('fieldTitle').value = file.name.replace(/\.[^/.]+$/,'');
+  }catch(err){
+    preview.innerHTML = `<div class="loading-txt">Could not process that photo — try a different file.</div>`;
+  }
+}
+
+function saveEntry(){
   const title = document.getElementById('fieldTitle').value.trim();
   const month = document.getElementById('fieldMonth').value;
   if(!title || !month){ alert('Please add a title and month.'); return; }
 
-  entries.push({
-    id: Date.now().toString(),
+  const payload = {
     type: currentType,
     title,
     subtitle: document.getElementById('fieldSubtitle').value.trim(),
@@ -515,9 +666,18 @@ async function saveEntry(){
     rating: currentRating,
     cover: selectedCover,
     month
-  });
+  };
+
+  if(editingId){
+    const idx = entries.findIndex(e => e.id === editingId);
+    if(idx > -1) entries[idx] = { ...entries[idx], ...payload };
+  } else {
+    entries.push({ id: Date.now().toString(), ...payload });
+  }
+
   persist();
   activeMonth = month;
+  editingId = null;
   closeModal();
   render();
 }
@@ -525,6 +685,46 @@ async function saveEntry(){
 document.getElementById('overlay').addEventListener('click', (e) => {
   if(e.target.id === 'overlay') closeModal();
 });
+
+/* ---------- Backup: export / import ---------- */
+function exportData(){
+  const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `the-archive-backup-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importData(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try{
+      const imported = JSON.parse(ev.target.result);
+      if(!Array.isArray(imported)) throw new Error('not an array');
+      if(!confirm(`Import ${imported.length} entries? They'll be added to your existing ${entries.length} entries (nothing will be overwritten).`)) return;
+      const existingIds = new Set(entries.map(x => x.id));
+      imported.forEach(it => {
+        if(!it || !it.title || !it.month) return;
+        if(!it.id || existingIds.has(it.id)) it.id = Date.now().toString() + Math.random().toString(36).slice(2,7);
+        existingIds.add(it.id);
+        entries.push(it);
+      });
+      persist();
+      render();
+      alert('Import complete.');
+    }catch(err){
+      alert("Couldn't read that file — make sure it's a backup exported from The Archive.");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
 
 loadEntries();
 </script>
