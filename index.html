@@ -18,7 +18,28 @@
   --gold:#c6a15b;
   --gold-bright:#dab86e;
   --ink:#221a12;
+  --input-bg:#fbf7ec;
+  --film-mat:#f4ecd8;
+  --photo-paper:#fff;
+  --transition:background-color .25s ease, color .25s ease, border-color .25s ease;
 }
+body.night{
+  --green-deep:#0c1a12;
+  --green:#12261a;
+  --green-soft:#1c3826;
+  --cream:#171310;
+  --cream-2:#221c15;
+  --wood:#8a6a48;
+  --wood-dark:#5c4530;
+  --gold:#d4af6a;
+  --gold-bright:#f0cd8a;
+  --ink:#ece2ce;
+  --input-bg:#2a231a;
+  --film-mat:#2a2117;
+  --photo-paper:#241d15;
+}
+body{transition:var(--transition);}
+.topbar,.sidebar,.card,.modal,.wrapped-modal,.icon-btn,.new-entry-btn,input,textarea,select,.month-tab,.view-toggle{transition:var(--transition);}
 *{box-sizing:border-box;}
 body{
   margin:0;
@@ -179,13 +200,13 @@ body{
 
 /* films: framed prints leaning on the wall */
 .room-item.rm-film{
-  width:96px;height:132px;background:#f4ecd8;padding:6px 6px 18px;box-shadow:4px 8px 16px rgba(0,0,0,0.4);
+  width:96px;height:132px;background:var(--film-mat);padding:6px 6px 18px;box-shadow:4px 8px 16px rgba(0,0,0,0.4);
 }
 .room-item.rm-film .rm-inner{width:100%;height:100%;background-size:cover;background-position:center;}
 
 /* photos: pinned to a corkboard */
 .room-item.rm-photo{
-  width:118px;background:#fff;padding:8px 8px 22px;box-shadow:3px 6px 14px rgba(0,0,0,0.3);
+  width:118px;background:var(--photo-paper);padding:8px 8px 22px;box-shadow:3px 6px 14px rgba(0,0,0,0.3);
 }
 .room-item.rm-photo .rm-inner{width:100%;aspect-ratio:1/1;background-size:cover;background-position:center;}
 .room-item.rm-photo::before{
@@ -201,6 +222,50 @@ body{
 }
 .corkboard .room-row{padding-top:30px;padding-bottom:20px;}
 .corkboard .room-plank{display:none;}
+
+/* ---------- Goals ---------- */
+.goal-bar-wrap{display:flex;align-items:center;gap:8px;margin:-6px 0 14px;max-width:280px;}
+.goal-bar-track{flex:1;height:5px;background:rgba(90,58,38,0.18);border-radius:3px;overflow:hidden;}
+.goal-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));border-radius:3px;transition:width .4s ease;}
+.goal-bar-text{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--wood);white-space:nowrap;}
+.goals-field-row{display:grid;grid-template-columns:1fr 90px;gap:10px;align-items:center;margin-bottom:12px;}
+.goals-field-row label{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--wood);}
+
+/* ---------- Share cards ---------- */
+.share-stage{position:fixed;top:0;left:-9999px;z-index:-1;}
+.share-card{
+  width:1000px;padding:70px 60px;background:linear-gradient(160deg,var(--cream),var(--cream-2));
+  border:10px solid var(--green-deep);position:relative;text-align:center;font-family:'Inter',sans-serif;
+  box-sizing:border-box;
+}
+.share-card::before{
+  content:'';position:absolute;inset:22px;border:1.5px solid var(--gold);pointer-events:none;
+}
+.share-crest{
+  width:74px;height:74px;border-radius:50%;border:3px solid var(--gold);margin:0 auto 26px;
+  display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;
+  font-size:26px;color:var(--green-deep);background:var(--cream);
+}
+.share-cover-wrap{width:380px;height:380px;margin:0 auto 32px;box-shadow:0 20px 40px rgba(0,0,0,0.3);border-radius:4px;overflow:hidden;}
+.share-cover{width:100%;height:100%;object-fit:cover;display:block;}
+.share-type{
+  font-family:'IBM Plex Mono',monospace;font-size:16px;letter-spacing:5px;text-transform:uppercase;
+  color:var(--gold);margin:0 0 14px;
+}
+.share-title{font-family:'Fraunces',serif;font-weight:700;font-size:46px;color:var(--ink);margin:0 0 10px;line-height:1.15;}
+.share-subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:22px;color:var(--wood);margin:0 0 20px;}
+.share-rating{font-size:32px;color:var(--gold);letter-spacing:6px;margin:0 0 40px;}
+.share-footer{
+  font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--wood);border-top:1px solid var(--gold);padding-top:22px;margin:0;
+}
+.share-wrapped-year{font-family:'Fraunces',serif;font-weight:700;font-size:90px;color:var(--green-deep);margin:0;}
+.share-wrapped-sub{font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:5px;text-transform:uppercase;color:var(--wood);margin:6px 0 46px;}
+.share-wrapped-total{font-family:'Fraunces',serif;font-weight:600;font-size:60px;color:var(--gold);margin:0 0 4px;}
+.share-wrapped-types{display:flex;justify-content:center;gap:44px;margin:36px 0 54px;}
+.share-wrapped-types div{display:flex;flex-direction:column;align-items:center;}
+.share-wrapped-types .n{font-family:'Fraunces',serif;font-weight:700;font-size:44px;color:var(--ink);}
+.share-wrapped-types .l{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--wood);}
 .hint{
   font-size:11px;color:var(--wood);opacity:0.7;margin:0 0 22px;font-style:italic;
 }
@@ -285,7 +350,7 @@ body{
 .search-row input{flex:1;}
 input,textarea,select{
   width:100%;padding:9px 11px;border:1px solid rgba(90,58,38,0.4);border-radius:2px;
-  font-family:'Inter',sans-serif;font-size:13px;background:#fbf7ec;color:var(--ink);
+  font-family:'Inter',sans-serif;font-size:13px;background:var(--input-bg);color:var(--ink);
 }
 .search-btn{
   background:var(--wood);color:var(--cream);border:none;padding:0 16px;border-radius:2px;cursor:pointer;
@@ -339,6 +404,12 @@ input,textarea,select{
   padding:38px 32px 30px;position:relative;text-align:center;
 }
 .wrapped-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:24px;color:var(--wood);cursor:pointer;line-height:1;}
+.wrapped-share{
+  position:absolute;top:14px;left:16px;background:none;border:1px solid var(--gold);color:var(--wood);
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  padding:6px 12px;border-radius:2px;cursor:pointer;
+}
+.wrapped-share:hover{background:rgba(198,161,91,0.15);}
 .wrapped-nav{display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:8px;}
 .wrapped-nav button{background:none;border:1px solid var(--gold);color:var(--wood);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:12px;}
 .wrapped-nav button:disabled{opacity:0.2;cursor:default;}
@@ -380,6 +451,8 @@ input,textarea,select{
     </div>
   </div>
   <div class="topbar-actions">
+    <button class="icon-btn" onclick="toggleGoals()" title="Set yearly goals">Goals</button>
+    <button class="icon-btn" onclick="toggleNight()" id="nightToggle" title="Toggle night mode">Night</button>
     <button class="icon-btn" onclick="openWrapped()" title="Your year in review">Wrapped</button>
     <button class="icon-btn" onclick="exportData()" title="Download a backup file">Export</button>
     <button class="icon-btn" onclick="document.getElementById('importInput').click()" title="Restore from a backup file">Import</button>
@@ -460,15 +533,89 @@ input,textarea,select{
 <div class="overlay" id="wrappedOverlay">
   <div class="wrapped-modal">
     <button class="wrapped-close" onclick="closeWrapped()">&times;</button>
+    <button class="wrapped-share" onclick="shareWrapped()" title="Download as image">&#8593; Share</button>
     <div id="wrappedContent"></div>
   </div>
 </div>
 
+<div class="overlay" id="goalsOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Yearly Goals</h3>
+      <button onclick="closeGoals()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--wood);margin-top:0;">Set a target for this year. Leave blank for anything you don't want to track.</p>
+      <div class="goals-field-row"><label>Books</label><input type="number" min="0" id="goalBook" placeholder="e.g. 24" /></div>
+      <div class="goals-field-row"><label>Albums</label><input type="number" min="0" id="goalAlbum" placeholder="e.g. 24" /></div>
+      <div class="goals-field-row"><label>Films</label><input type="number" min="0" id="goalFilm" placeholder="e.g. 52" /></div>
+      <div class="goals-field-row"><label>Photos</label><input type="number" min="0" id="goalPhoto" placeholder="e.g. 12" /></div>
+      <button class="save-btn" onclick="saveGoals()">Save Goals</button>
+    </div>
+  </div>
+</div>
+
+<div class="share-stage" id="shareStage">
+  <div class="share-card" id="shareEntryCard">
+    <div class="share-crest">TA</div>
+    <div class="share-cover-wrap"><img id="shareEntryCover" class="share-cover" crossorigin="anonymous" /></div>
+    <p class="share-type" id="shareEntryType"></p>
+    <p class="share-title" id="shareEntryTitle"></p>
+    <p class="share-subtitle" id="shareEntrySubtitle"></p>
+    <p class="share-rating" id="shareEntryRating"></p>
+    <p class="share-footer" id="shareEntryFooter"></p>
+  </div>
+  <div class="share-card wrapped" id="shareWrappedCard">
+    <div class="share-crest">TA</div>
+    <p class="share-wrapped-year" id="shareWrappedYear"></p>
+    <p class="share-wrapped-sub">Your Year, Archived</p>
+    <p class="share-wrapped-total" id="shareWrappedTotal"></p>
+    <div class="share-wrapped-types" id="shareWrappedTypes"></div>
+    <p class="share-footer">THE ARCHIVE</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYzlmNWIwNTZjNjc2YjA3OGIxYTIzNzBjNjdmYTU4YSIsIm5iZiI6MTc4NjY2MzI5Ny4xNzkwMDAxLCJzdWIiOiI2YTdlNTE4MTIwMTVmMjM5ODQyZDI4ZmQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Hbj-EE5Jh1Hkweaudyi39UmBiZ27-Tjdjg3f9kaERXo';
 const DISCOGS_TOKEN = 'qKwdCkumFuEduPNhpGnLDCWbleCZgZoNDlAwTZdq';
 let entries = [];
 let viewMode = (function(){ try{ return localStorage.getItem('the-archive-viewmode') || 'grid'; }catch(e){ return 'grid'; } })();
+
+function initNightMode(){
+  try{
+    if(localStorage.getItem('the-archive-night') === '1'){
+      document.body.classList.add('night');
+      document.getElementById('nightToggle').classList.add('active');
+    }
+  }catch(e){}
+}
+function toggleNight(){
+  const on = document.body.classList.toggle('night');
+  document.getElementById('nightToggle').classList.toggle('active', on);
+  try{ localStorage.setItem('the-archive-night', on ? '1' : '0'); }catch(e){}
+}
+
+/* ---------- Goals ---------- */
+let goals = {};
+function loadGoals(){
+  try{ goals = JSON.parse(localStorage.getItem('the-archive-goals') || '{}'); }catch(e){ goals = {}; }
+}
+function toggleGoals(){
+  document.getElementById('goalBook').value = goals.book || '';
+  document.getElementById('goalAlbum').value = goals.album || '';
+  document.getElementById('goalFilm').value = goals.film || '';
+  document.getElementById('goalPhoto').value = goals.photo || '';
+  document.getElementById('goalsOverlay').classList.add('open');
+}
+function closeGoals(){ document.getElementById('goalsOverlay').classList.remove('open'); }
+function saveGoals(){
+  const val = (id) => { const n = parseInt(document.getElementById(id).value, 10); return isNaN(n) || n <= 0 ? null : n; };
+  goals = { book: val('goalBook'), album: val('goalAlbum'), film: val('goalFilm'), photo: val('goalPhoto') };
+  try{ localStorage.setItem('the-archive-goals', JSON.stringify(goals)); }catch(e){}
+  closeGoals();
+  render();
+}
 let currentType = 'book';
 let selectedCover = '';
 let currentRating = 0;
@@ -550,6 +697,7 @@ function renderGrid(area, monthEntries){
     <div class="card ${e.type}" draggable="true" data-id="${e.id}">
       <div class="type-flag">${e.type}</div>
       <div class="card-controls">
+        <button class="card-btn share" onclick="event.stopPropagation(); shareEntry('${e.id}')" title="Share">&#8593;</button>
         <button class="card-btn edit" onclick="event.stopPropagation(); editEntry('${e.id}')" title="Edit">&#9998;</button>
         <button class="card-btn delete" onclick="event.stopPropagation(); deleteEntry('${e.id}')" title="Delete">&#128465;</button>
       </div>
@@ -579,6 +727,18 @@ function jitter(id, spread){
   return ((h % (spread*2)) - spread) / 10;
 }
 
+function goalBarHtml(type){
+  const target = goals[type];
+  if(!target) return '';
+  const year = activeMonth ? activeMonth.slice(0,4) : String(new Date().getFullYear());
+  const count = entries.filter(e => e.type === type && e.month.startsWith(year)).length;
+  const pct = Math.min(100, Math.round((count/target)*100));
+  return `<div class="goal-bar-wrap">
+    <div class="goal-bar-track"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
+    <span class="goal-bar-text">${count} / ${target} this year</span>
+  </div>`;
+}
+
 function renderRoom(area, monthEntries){
   const sections = ROOM_SECTIONS.map(s => ({
     ...s,
@@ -588,6 +748,7 @@ function renderRoom(area, monthEntries){
   area.innerHTML = `<div class="room">` + sections.map(s => `
     <div class="room-section">
       <p class="room-label">${s.label}</p>
+      ${goalBarHtml(s.type)}
       <div class="room-row ${s.type==='photo' ? 'corkboard' : ''}">
         <div class="room-plank"></div>
         ${s.items.map(e => renderRoomItem(e)).join('')}
@@ -1042,7 +1203,67 @@ function importData(e){
   e.target.value = '';
 }
 
+initNightMode();
+loadGoals();
 loadEntries();
+
+/* ---------- Share cards ---------- */
+function downloadCanvasImg(canvas, filename){
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function shareEntry(id){
+  const e = entries.find(x => x.id === id);
+  if(!e) return;
+  const coverWrap = document.getElementById('shareEntryCover').parentElement;
+  if(e.cover){
+    document.getElementById('shareEntryCover').src = e.cover;
+    coverWrap.style.display = 'block';
+  } else {
+    coverWrap.style.display = 'none';
+  }
+  document.getElementById('shareEntryType').textContent = e.type;
+  document.getElementById('shareEntryTitle').textContent = e.title;
+  document.getElementById('shareEntrySubtitle').textContent = e.subtitle || '';
+  document.getElementById('shareEntrySubtitle').style.display = e.subtitle ? 'block' : 'none';
+  document.getElementById('shareEntryRating').textContent = e.rating ? '★'.repeat(e.rating) + '☆'.repeat(5-e.rating) : '';
+  document.getElementById('shareEntryRating').style.display = e.rating ? 'block' : 'none';
+  document.getElementById('shareEntryFooter').textContent = 'THE ARCHIVE · ' + monthLabel(e.month).toUpperCase();
+
+  await new Promise(res => setTimeout(res, 60)); // let the cover image paint
+  try{
+    const canvas = await html2canvas(document.getElementById('shareEntryCard'), { useCORS: true, backgroundColor: null, scale: 2 });
+    downloadCanvasImg(canvas, `${e.title.replace(/[^a-z0-9]+/gi,'-').toLowerCase()}.png`);
+  }catch(err){
+    alert("Couldn't generate the image — this can happen if a cover image blocks cross-origin capture. Try again, or use a different entry.");
+  }
+}
+
+async function shareWrapped(){
+  const years = getArchiveYears();
+  if(!wrappedYear || years.length === 0) return;
+  const yearEntries = entries.filter(e => e.month.startsWith(wrappedYear));
+  const byType = { book:0, album:0, film:0, photo:0 };
+  yearEntries.forEach(e => { byType[e.type] = (byType[e.type]||0) + 1; });
+
+  document.getElementById('shareWrappedYear').textContent = wrappedYear;
+  document.getElementById('shareWrappedTotal').textContent = yearEntries.length + ' entries logged';
+  document.getElementById('shareWrappedTypes').innerHTML = ['book','album','film','photo'].map(t =>
+    `<div><span class="n">${byType[t]||0}</span><span class="l">${t}s</span></div>`
+  ).join('');
+
+  try{
+    const canvas = await html2canvas(document.getElementById('shareWrappedCard'), { useCORS: true, backgroundColor: null, scale: 2 });
+    downloadCanvasImg(canvas, `the-archive-wrapped-${wrappedYear}.png`);
+  }catch(err){
+    alert("Couldn't generate the image — please try again.");
+  }
+}
 </script>
 </body>
 </html>
