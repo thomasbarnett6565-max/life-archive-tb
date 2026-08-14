@@ -115,6 +115,92 @@ body{
   font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;
   text-transform:uppercase;color:var(--wood);
 }
+.view-toggle{
+  margin-left:auto;background:transparent;border:1px solid var(--wood);color:var(--wood);
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  padding:8px 14px;border-radius:2px;cursor:pointer;transition:all .15s ease;
+}
+.view-toggle:hover{background:var(--wood);color:var(--cream);}
+.view-toggle.active{background:var(--green-deep);color:var(--gold-bright);border-color:var(--green-deep);}
+
+/* ---------- The Room ---------- */
+.room{display:flex;flex-direction:column;gap:38px;padding-top:6px;}
+.room-section{position:relative;}
+.room-label{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--wood);margin:0 0 14px;
+}
+.room-row{
+  display:flex;align-items:flex-end;gap:16px;overflow-x:auto;overflow-y:visible;
+  padding:26px 10px 26px;position:relative;
+}
+.room-row::-webkit-scrollbar{height:6px;}
+.room-row::-webkit-scrollbar-thumb{background:var(--wood);border-radius:3px;}
+.room-plank{
+  position:absolute;left:0;right:0;bottom:14px;height:18px;
+  background:linear-gradient(180deg,#7a5230,#4a2f1a);
+  box-shadow:0 8px 14px rgba(0,0,0,0.35), inset 0 2px 3px rgba(255,255,255,0.08);
+  border-radius:1px;
+}
+.room-item{
+  position:relative;flex-shrink:0;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease;
+  z-index:1;
+}
+.room-item:hover{transform:translateY(-8px) rotate(0deg) !important;z-index:5;}
+.room-item .rm-label{
+  position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);white-space:nowrap;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--wood);opacity:0;transition:opacity .15s ease;
+  pointer-events:none;max-width:140px;overflow:hidden;text-overflow:ellipsis;
+}
+.room-item:hover .rm-label{opacity:1;}
+
+/* books: upright spines */
+.room-item.rm-book{
+  width:46px;height:172px;border-radius:2px 5px 5px 2px;background-size:cover;background-position:center;
+  box-shadow:inset -8px 0 14px rgba(0,0,0,0.3), 3px 6px 10px rgba(0,0,0,0.35);
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;
+}
+.room-item.rm-book span{
+  writing-mode:vertical-rl;transform:rotate(180deg);font-family:'Fraunces',serif;font-weight:600;
+  font-size:10.5px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.7);max-height:150px;overflow:hidden;
+  letter-spacing:0.3px;
+}
+
+/* albums: leaning records in a crate */
+.room-item.rm-album{
+  width:118px;height:118px;border-radius:2px;background-size:cover;background-position:center;
+  box-shadow:5px 8px 16px rgba(0,0,0,0.4);
+}
+.room-item.rm-album::after{
+  content:'';position:absolute;right:-9px;top:6px;bottom:6px;width:12px;border-radius:6px;
+  background:repeating-linear-gradient(180deg,#161616,#161616 2px,#2b2b2b 3px,#2b2b2b 4px);
+  box-shadow:2px 2px 6px rgba(0,0,0,0.4);
+}
+
+/* films: framed prints leaning on the wall */
+.room-item.rm-film{
+  width:96px;height:132px;background:#f4ecd8;padding:6px 6px 18px;box-shadow:4px 8px 16px rgba(0,0,0,0.4);
+}
+.room-item.rm-film .rm-inner{width:100%;height:100%;background-size:cover;background-position:center;}
+
+/* photos: pinned to a corkboard */
+.room-item.rm-photo{
+  width:118px;background:#fff;padding:8px 8px 22px;box-shadow:3px 6px 14px rgba(0,0,0,0.3);
+}
+.room-item.rm-photo .rm-inner{width:100%;aspect-ratio:1/1;background-size:cover;background-position:center;}
+.room-item.rm-photo::before{
+  content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:13px;height:13px;
+  border-radius:50%;background:radial-gradient(circle at 32% 30%,var(--gold-bright),var(--wood));
+  box-shadow:0 2px 4px rgba(0,0,0,0.45);z-index:2;
+}
+.corkboard{
+  background:
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 2px, transparent 2px 8px),
+    linear-gradient(180deg,#b98a58,#a67849);
+  border-radius:3px;box-shadow:inset 0 0 30px rgba(0,0,0,0.25);
+}
+.corkboard .room-row{padding-top:30px;padding-bottom:20px;}
+.corkboard .room-plank{display:none;}
 .hint{
   font-size:11px;color:var(--wood);opacity:0.7;margin:0 0 22px;font-style:italic;
 }
@@ -308,6 +394,7 @@ input,textarea,select{
     <div class="month-header">
       <h2 id="monthTitle">—</h2>
       <span class="sub" id="monthSub">0 entries</span>
+      <button class="view-toggle" id="viewToggle" onclick="toggleView()">The Room</button>
     </div>
     <p class="hint" id="dragHint">Drag a card to reorder it. Hover a card for edit / delete.</p>
     <div id="entryArea"></div>
@@ -382,6 +469,7 @@ const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYzlmNWIwNTZjNjc2YjA3OGIxYTI
 const DISCOGS_TOKEN = 'qKwdCkumFuEduPNhpGnLDCWbleCZgZoNDlAwTZdq';
 const DISCOGS_TOKEN = 'qKwdCkumFuEduPNhpGnLDCWbleCZgZoNDlAwTZdq';
 let entries = [];
+let viewMode = (function(){ try{ return localStorage.getItem('the-archive-viewmode') || 'grid'; }catch(e){ return 'grid'; } })();
 let currentType = 'book';
 let selectedCover = '';
 let currentRating = 0;
@@ -439,13 +527,26 @@ function renderMain(){
   document.getElementById('monthTitle').textContent = monthLabel(activeMonth);
   const monthEntries = entries.filter(e => e.month === activeMonth);
   document.getElementById('monthSub').textContent = monthEntries.length + ' entr' + (monthEntries.length===1?'y':'ies') + ' logged';
-  document.getElementById('dragHint').style.display = monthEntries.length > 1 ? 'block' : 'none';
+  document.getElementById('dragHint').style.display = (viewMode === 'grid' && monthEntries.length > 1) ? 'block' : 'none';
+  document.getElementById('viewToggle').textContent = viewMode === 'grid' ? 'The Room' : 'The List';
+  document.getElementById('viewToggle').classList.toggle('active', viewMode === 'room');
 
   const area = document.getElementById('entryArea');
   if(monthEntries.length === 0){
     area.innerHTML = `<div class="empty-state">Nothing archived this month yet.</div>`;
     return;
   }
+  if(viewMode === 'room'){ renderRoom(area, monthEntries); return; }
+  renderGrid(area, monthEntries);
+}
+
+function toggleView(){
+  viewMode = viewMode === 'grid' ? 'room' : 'grid';
+  try{ localStorage.setItem('the-archive-viewmode', viewMode); }catch(e){}
+  renderMain();
+}
+
+function renderGrid(area, monthEntries){
   area.innerHTML = `<div class="entry-grid">` + monthEntries.map(e => `
     <div class="card ${e.type}" draggable="true" data-id="${e.id}">
       <div class="type-flag">${e.type}</div>
@@ -464,6 +565,54 @@ function renderMain(){
       </div>
     </div>
   `).join('') + `</div>`;
+}
+
+const ROOM_SECTIONS = [
+  { type:'book',  label:'The Shelf',    empty:false },
+  { type:'album', label:'The Crate',    empty:false },
+  { type:'film',  label:'The Wall',     empty:false },
+  { type:'photo', label:'The Corkboard',empty:false }
+];
+
+function jitter(id, spread){
+  let h = 0;
+  for(let i=0;i<id.length;i++) h = (h*31 + id.charCodeAt(i)) % 1000;
+  return ((h % (spread*2)) - spread) / 10;
+}
+
+function renderRoom(area, monthEntries){
+  const sections = ROOM_SECTIONS.map(s => ({
+    ...s,
+    items: monthEntries.filter(e => e.type === s.type)
+  })).filter(s => s.items.length > 0);
+
+  area.innerHTML = `<div class="room">` + sections.map(s => `
+    <div class="room-section">
+      <p class="room-label">${s.label}</p>
+      <div class="room-row ${s.type==='photo' ? 'corkboard' : ''}">
+        <div class="room-plank"></div>
+        ${s.items.map(e => renderRoomItem(e)).join('')}
+      </div>
+    </div>
+  `).join('') + `</div>`;
+
+  area.querySelectorAll('.room-item').forEach(el => {
+    el.addEventListener('click', () => editEntry(el.dataset.id));
+  });
+}
+
+function renderRoomItem(e){
+  const bg = e.cover ? `background-image:url('${e.cover}')` : `background:var(--green-soft)`;
+  if(e.type === 'book'){
+    return `<div class="room-item rm-book" style="${bg}" data-id="${e.id}"><span>${escapeHtml(e.title)}</span></div>`;
+  }
+  if(e.type === 'album'){
+    return `<div class="room-item rm-album" style="${bg}; transform:rotate(${jitter(e.id,25)}deg);" data-id="${e.id}"><span class="rm-label">${escapeHtml(e.title)}</span></div>`;
+  }
+  if(e.type === 'film'){
+    return `<div class="room-item rm-film" style="transform:rotate(${jitter(e.id,15)}deg);" data-id="${e.id}"><div class="rm-inner" style="${bg}"></div><span class="rm-label">${escapeHtml(e.title)}</span></div>`;
+  }
+  return `<div class="room-item rm-photo" style="transform:rotate(${jitter(e.id,25)}deg);" data-id="${e.id}"><div class="rm-inner" style="${bg}"></div><span class="rm-label">${escapeHtml(e.title)}</span></div>`;
 }
 
 function escapeHtml(s){
