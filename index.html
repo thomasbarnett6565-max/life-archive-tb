@@ -89,6 +89,15 @@ body{
   transition:all .15s ease;
 }
 .new-entry-btn:hover{background:var(--gold-bright);transform:translateY(-1px);}
+.nav-tabs{display:flex;gap:4px;margin:0 auto 0 40px;}
+.nav-tab{
+  background:transparent;border:1px solid rgba(198,161,91,0.35);color:rgba(243,234,217,0.75);
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  padding:10px 18px;border-radius:2px;cursor:pointer;transition:all .15s ease;
+}
+.nav-tab:hover{border-color:var(--gold);color:var(--paper);}
+.nav-tab.active{background:rgba(198,161,91,0.18);border-color:var(--gold);color:var(--gold-bright);}
+@media (max-width:900px){.nav-tabs{margin:10px 0 0;}.topbar{flex-wrap:wrap;}}
 .topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .icon-btn{
   background:transparent;color:var(--gold-bright);border:1px solid rgba(198,161,91,0.5);
@@ -222,6 +231,95 @@ body{
   border-radius:3px;box-shadow:inset 0 0 30px rgba(0,0,0,0.25);
 }
 .corkboard .room-row{padding-top:30px;padding-bottom:20px;}
+
+/* ---------- The Atlas ---------- */
+.atlas-page{max-width:1200px;margin:0 auto;padding:36px 40px 60px;}
+.atlas-crumbs{
+  display:flex;align-items:center;gap:10px;margin-bottom:6px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--wood);
+}
+.atlas-crumbs .crumb-link{cursor:pointer;color:var(--wood);text-decoration:underline;text-underline-offset:3px;}
+.atlas-crumbs .crumb-link:hover{color:var(--ink);}
+.atlas-crumbs .crumb-current{color:var(--ink);}
+.atlas-header{
+  display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  border-bottom:2px solid var(--wood);padding-bottom:16px;margin-bottom:28px;
+}
+.atlas-header h2{font-family:'Fraunces',serif;font-weight:600;font-size:34px;margin:0;color:var(--ink);}
+.atlas-header .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--wood);}
+.atlas-add-btn{
+  background:var(--green-deep);color:var(--gold-bright);border:none;font-family:'IBM Plex Mono',monospace;
+  font-weight:500;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:10px 18px;
+  border-radius:2px;cursor:pointer;white-space:nowrap;
+}
+.atlas-add-btn:hover{background:var(--green);}
+.atlas-empty{text-align:center;padding:70px 20px;color:var(--wood);font-family:'Fraunces',serif;font-style:italic;font-size:17px;opacity:0.75;}
+
+/* countries: passport stamp cards */
+.stamp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:22px;}
+.stamp-card{
+  position:relative;cursor:pointer;text-align:center;padding:26px 12px 18px;
+  border:2px dashed var(--gold);border-radius:50%/38%;background:var(--cream-2);
+  transition:transform .15s ease, box-shadow .15s ease;aspect-ratio:1/1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.stamp-card:hover{transform:rotate(-2deg) scale(1.04);box-shadow:0 10px 22px rgba(0,0,0,0.18);}
+.stamp-card .stamp-name{font-family:'Fraunces',serif;font-weight:700;font-size:16px;color:var(--ink);padding:0 8px;line-height:1.2;}
+.stamp-card .stamp-count{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--wood);margin-top:6px;}
+.stamp-card .stamp-del{
+  position:absolute;top:6px;right:14px;background:none;border:none;color:var(--wood);font-size:14px;
+  cursor:pointer;opacity:0;transition:opacity .15s;
+}
+.stamp-card:hover .stamp-del{opacity:0.7;}
+.stamp-card .stamp-del:hover{opacity:1;color:#7a2e22;}
+
+/* cities: ledger cards */
+.city-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;}
+.city-card{
+  position:relative;cursor:pointer;background:var(--cream-2);border:1px solid rgba(90,58,38,0.25);
+  border-radius:3px;padding:18px 18px 16px;transition:transform .15s ease, box-shadow .15s ease;
+}
+.city-card:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,0.15);}
+.city-card .city-name{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:var(--ink);margin:0 0 4px;}
+.city-card .city-notes{font-size:12px;color:var(--wood);margin:0 0 8px;line-height:1.4;max-height:3.6em;overflow:hidden;}
+.city-card .city-count{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);}
+.city-card .city-del{
+  position:absolute;top:10px;right:10px;background:none;border:none;color:var(--wood);font-size:16px;
+  cursor:pointer;opacity:0;transition:opacity .15s;
+}
+.city-card:hover .city-del{opacity:0.7;}
+.city-card .city-del:hover{opacity:1;color:#7a2e22;}
+
+/* pinboard reuses corkboard look */
+.pinboard{
+  background:
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 2px, transparent 2px 8px),
+    linear-gradient(180deg,#b98a58,#a67849);
+  border-radius:4px;box-shadow:inset 0 0 40px rgba(0,0,0,0.25);
+  min-height:260px;padding:34px 24px 24px;
+  display:flex;flex-wrap:wrap;gap:22px 26px;align-content:flex-start;
+}
+.pin-photo{
+  position:relative;width:150px;background:var(--photo-paper);padding:9px 9px 26px;
+  box-shadow:4px 8px 16px rgba(0,0,0,0.35);cursor:default;
+}
+.pin-photo img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;}
+.pin-photo::before{
+  content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:13px;height:13px;
+  border-radius:50%;background:radial-gradient(circle at 32% 30%,var(--gold-bright),var(--wood));
+  box-shadow:0 2px 4px rgba(0,0,0,0.45);
+}
+.pin-caption{
+  position:absolute;bottom:6px;left:9px;right:9px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;
+  color:var(--wood);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.pin-del{
+  position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--green-deep);
+  color:var(--gold-bright);border:none;font-size:11px;cursor:pointer;opacity:0;transition:opacity .15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.pin-photo:hover .pin-del{opacity:1;}
+.pinboard-empty{width:100%;text-align:center;padding:50px 10px;color:rgba(255,255,255,0.7);font-family:'Fraunces',serif;font-style:italic;}
 .corkboard .room-plank{display:none;}
 
 /* ---------- Goals ---------- */
@@ -447,22 +545,26 @@ input,textarea,select{
   <div class="brand">
     <div class="crest">TA</div>
     <div>
-      <h1>The Archive</h1>
-      <span>Est. 2026 &middot; A Record of Consumption</span>
+      <h1 id="pageTitle">The Archive</h1>
+      <span id="pageTagline">Est. 2026 &middot; A Record of Consumption</span>
     </div>
   </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="navArchive" onclick="showPage('archive')">The Archive</button>
+    <button class="nav-tab" id="navAtlas" onclick="showPage('atlas')">The Atlas</button>
+  </div>
   <div class="topbar-actions">
-    <button class="icon-btn" onclick="toggleGoals()" title="Set yearly goals">Goals</button>
+    <button class="icon-btn" onclick="toggleGoals()" title="Set yearly goals" id="goalsBtn">Goals</button>
     <button class="icon-btn" onclick="toggleNight()" id="nightToggle" title="Toggle night mode">Night</button>
-    <button class="icon-btn" onclick="openWrapped()" title="Your year in review">Wrapped</button>
+    <button class="icon-btn" onclick="openWrapped()" title="Your year in review" id="wrappedBtn">Wrapped</button>
     <button class="icon-btn" onclick="exportData()" title="Download a backup file">Export</button>
     <button class="icon-btn" onclick="document.getElementById('importInput').click()" title="Restore from a backup file">Import</button>
     <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importData(event)" />
-    <button class="new-entry-btn" onclick="openModal()">+ New Entry</button>
+    <button class="new-entry-btn" onclick="openModal()" id="newEntryBtn">+ New Entry</button>
   </div>
 </div>
 
-<div class="layout">
+<div class="layout" id="archiveLayout">
   <div class="sidebar" id="sidebar"></div>
   <div class="main">
     <div class="month-header">
@@ -473,6 +575,10 @@ input,textarea,select{
     <p class="hint" id="dragHint">Drag a card to reorder it. Hover a card for edit / delete.</p>
     <div id="entryArea"></div>
   </div>
+</div>
+
+<div class="atlas-page" id="atlasPage" style="display:none;">
+  <div id="atlasContent"></div>
 </div>
 
 <div class="overlay" id="overlay">
@@ -552,6 +658,67 @@ input,textarea,select{
       <div class="goals-field-row"><label>Films</label><input type="number" min="0" id="goalFilm" placeholder="e.g. 52" /></div>
       <div class="goals-field-row"><label>Photos</label><input type="number" min="0" id="goalPhoto" placeholder="e.g. 12" /></div>
       <button class="save-btn" onclick="saveGoals()">Save Goals</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="countryOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="countryModalTitle">Add a Country</h3>
+      <button onclick="closeCountryModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Country</label>
+        <input id="countryFieldName" placeholder="e.g. Japan" />
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <textarea id="countryFieldNotes" rows="3" placeholder="Trip notes, dates, anything..."></textarea>
+      </div>
+      <button class="save-btn" onclick="saveCountry()">Save Country</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="cityOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="cityModalTitle">Add a City</h3>
+      <button onclick="closeCityModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>City</label>
+        <input id="cityFieldName" placeholder="e.g. Kyoto" />
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <textarea id="cityFieldNotes" rows="3" placeholder="What you did, where you stayed..."></textarea>
+      </div>
+      <button class="save-btn" onclick="saveCity()">Save City</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="pinOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Pin a Photo</h3>
+      <button onclick="closePinModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Photo</label>
+        <input type="file" id="pinFieldFile" accept="image/*" onchange="handlePinUpload(event)" />
+      </div>
+      <div id="pinPreview" style="display:none;"></div>
+      <div class="field">
+        <label>Caption</label>
+        <input id="pinFieldCaption" placeholder="A line about this one..." />
+      </div>
+      <button class="save-btn" id="pinSaveBtn" onclick="savePin()" disabled>Pin It</button>
     </div>
   </div>
 </div>
@@ -1163,10 +1330,21 @@ function renderWrapped(){
 document.getElementById('overlay').addEventListener('click', (e) => {
   if(e.target.id === 'overlay') closeModal();
 });
+const OVERLAY_CLOSERS = {
+  goalsOverlay: closeGoals,
+  countryOverlay: closeCountryModal,
+  cityOverlay: closeCityModal,
+  pinOverlay: closePinModal
+};
+Object.keys(OVERLAY_CLOSERS).forEach(id => {
+  const node = document.getElementById(id);
+  if(node) node.addEventListener('click', (e) => { if(e.target.id === id) OVERLAY_CLOSERS[id](); });
+});
 
 /* ---------- Backup: export / import ---------- */
 function exportData(){
-  const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+  const payload = { entries, atlas, goals, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -1183,18 +1361,42 @@ function importData(e){
   const reader = new FileReader();
   reader.onload = (ev) => {
     try{
-      const imported = JSON.parse(ev.target.result);
-      if(!Array.isArray(imported)) throw new Error('not an array');
-      if(!confirm(`Import ${imported.length} entries? They'll be added to your existing ${entries.length} entries (nothing will be overwritten).`)) return;
+      const parsed = JSON.parse(ev.target.result);
+      // backward compatible: older backups were a plain array of entries
+      const importedEntries = Array.isArray(parsed) ? parsed : (parsed.entries || []);
+      const importedAtlas = Array.isArray(parsed) ? [] : (parsed.atlas || []);
+      const importedGoals = Array.isArray(parsed) ? {} : (parsed.goals || {});
+      const countryNote = importedAtlas.length ? ` and ${importedAtlas.length} countr${importedAtlas.length===1?'y':'ies'} from the Atlas` : '';
+      if(!confirm(`Import ${importedEntries.length} entries${countryNote}? They'll be added to what you already have (nothing will be overwritten).`)) return;
+
       const existingIds = new Set(entries.map(x => x.id));
-      imported.forEach(it => {
+      importedEntries.forEach(it => {
         if(!it || !it.title || !it.month) return;
         if(!it.id || existingIds.has(it.id)) it.id = Date.now().toString() + Math.random().toString(36).slice(2,7);
         existingIds.add(it.id);
         entries.push(it);
       });
       persist();
+
+      if(importedAtlas.length){
+        const existingCountryIds = new Set(atlas.map(c => c.id));
+        importedAtlas.forEach(c => {
+          if(!c || !c.name) return;
+          if(!c.id || existingCountryIds.has(c.id)) c.id = Date.now().toString() + Math.random().toString(36).slice(2,7);
+          existingCountryIds.add(c.id);
+          if(!Array.isArray(c.cities)) c.cities = [];
+          atlas.push(c);
+        });
+        persistAtlas();
+      }
+
+      if(importedGoals && Object.keys(importedGoals).length){
+        goals = { ...goals, ...importedGoals };
+        try{ localStorage.setItem('the-archive-goals', JSON.stringify(goals)); }catch(err){}
+      }
+
       render();
+      if(currentPage === 'atlas') renderAtlas();
       alert('Import complete.');
     }catch(err){
       alert("Couldn't read that file — make sure it's a backup exported from The Archive.");
@@ -1204,8 +1406,225 @@ function importData(e){
   e.target.value = '';
 }
 
+/* ---------- Page navigation ---------- */
+let currentPage = 'archive';
+function showPage(page){
+  currentPage = page;
+  document.getElementById('archiveLayout').style.display = page === 'archive' ? 'flex' : 'none';
+  document.getElementById('atlasPage').style.display = page === 'atlas' ? 'block' : 'none';
+  document.getElementById('navArchive').classList.toggle('active', page === 'archive');
+  document.getElementById('navAtlas').classList.toggle('active', page === 'atlas');
+  const archiveOnly = ['newEntryBtn','goalsBtn','wrappedBtn'];
+  archiveOnly.forEach(id => document.getElementById(id).style.display = page === 'archive' ? '' : 'none');
+  if(page === 'archive'){
+    document.getElementById('pageTitle').textContent = 'The Archive';
+    document.getElementById('pageTagline').textContent = 'Est. 2026 · A Record of Consumption';
+  } else {
+    document.getElementById('pageTitle').textContent = 'The Atlas';
+    document.getElementById('pageTagline').textContent = 'Everywhere You\'ve Been';
+    renderAtlas();
+  }
+}
+
+/* ---------- The Atlas: data ---------- */
+let atlas = [];
+let atlasCountryId = null;
+let atlasCityId = null;
+
+function loadAtlas(){
+  try{ atlas = JSON.parse(localStorage.getItem('the-archive-atlas') || '[]'); }
+  catch(e){ atlas = []; }
+}
+function persistAtlas(){
+  try{ localStorage.setItem('the-archive-atlas', JSON.stringify(atlas)); }
+  catch(e){ alert('Could not save — your browser storage may be full (photos take up space).'); }
+}
+
+function renderAtlas(){
+  const el = document.getElementById('atlasContent');
+  if(atlasCityId){ renderPinboardView(el); return; }
+  if(atlasCountryId){ renderCityListView(el); return; }
+  renderCountriesView(el);
+}
+
+/* --- Level 1: countries --- */
+function renderCountriesView(el){
+  el.innerHTML = `
+    <div class="atlas-header">
+      <div>
+        <h2>Countries</h2>
+        <span class="sub">${atlas.length} visited</span>
+      </div>
+      <button class="atlas-add-btn" onclick="openCountryModal()">+ Add Country</button>
+    </div>
+    ${atlas.length === 0 ? `<div class="atlas-empty">No stamps in the passport yet.</div>` : `
+    <div class="stamp-grid">
+      ${atlas.map(c => `
+        <div class="stamp-card" onclick="enterCountry('${c.id}')">
+          <button class="stamp-del" onclick="event.stopPropagation(); deleteCountry('${c.id}')" title="Delete">&#128465;</button>
+          <div class="stamp-name">${escapeHtml(c.name)}</div>
+          <div class="stamp-count">${c.cities.length} cit${c.cities.length===1?'y':'ies'}</div>
+        </div>
+      `).join('')}
+    </div>`}
+  `;
+}
+function openCountryModal(){
+  document.getElementById('countryFieldName').value = '';
+  document.getElementById('countryFieldNotes').value = '';
+  document.getElementById('countryOverlay').classList.add('open');
+}
+function closeCountryModal(){ document.getElementById('countryOverlay').classList.remove('open'); }
+function saveCountry(){
+  const name = document.getElementById('countryFieldName').value.trim();
+  if(!name){ alert('Please add a country name.'); return; }
+  atlas.push({ id: Date.now().toString(), name, notes: document.getElementById('countryFieldNotes').value.trim(), cities: [] });
+  persistAtlas();
+  closeCountryModal();
+  renderAtlas();
+}
+function deleteCountry(id){
+  const c = atlas.find(x => x.id === id);
+  if(!c) return;
+  if(!confirm(`Delete ${c.name} and everything in it (${c.cities.length} cities)? This can't be undone.`)) return;
+  atlas = atlas.filter(x => x.id !== id);
+  persistAtlas();
+  renderAtlas();
+}
+function enterCountry(id){ atlasCountryId = id; atlasCityId = null; renderAtlas(); }
+
+/* --- Level 2: cities --- */
+function renderCityListView(el){
+  const country = atlas.find(c => c.id === atlasCountryId);
+  if(!country){ atlasCountryId = null; renderAtlas(); return; }
+  el.innerHTML = `
+    <div class="atlas-crumbs">
+      <span class="crumb-link" onclick="atlasCountryId=null; renderAtlas();">Countries</span> / <span class="crumb-current">${escapeHtml(country.name)}</span>
+    </div>
+    <div class="atlas-header">
+      <div>
+        <h2>${escapeHtml(country.name)}</h2>
+        <span class="sub">${country.cities.length} cit${country.cities.length===1?'y':'ies'} logged</span>
+      </div>
+      <button class="atlas-add-btn" onclick="openCityModal()">+ Add City</button>
+    </div>
+    ${country.notes ? `<p style="font-size:13px;color:var(--wood);margin:-14px 0 24px;font-style:italic;">${escapeHtml(country.notes)}</p>` : ''}
+    ${country.cities.length === 0 ? `<div class="atlas-empty">No cities logged for ${escapeHtml(country.name)} yet.</div>` : `
+    <div class="city-grid">
+      ${country.cities.map(city => `
+        <div class="city-card" onclick="enterCity('${city.id}')">
+          <button class="city-del" onclick="event.stopPropagation(); deleteCity('${city.id}')" title="Delete">&#128465;</button>
+          <p class="city-name">${escapeHtml(city.name)}</p>
+          ${city.notes ? `<p class="city-notes">${escapeHtml(city.notes)}</p>` : ''}
+          <p class="city-count">${city.photos.length} photo${city.photos.length===1?'':'s'} pinned</p>
+        </div>
+      `).join('')}
+    </div>`}
+  `;
+}
+function openCityModal(){
+  document.getElementById('cityFieldName').value = '';
+  document.getElementById('cityFieldNotes').value = '';
+  document.getElementById('cityOverlay').classList.add('open');
+}
+function closeCityModal(){ document.getElementById('cityOverlay').classList.remove('open'); }
+function saveCity(){
+  const country = atlas.find(c => c.id === atlasCountryId);
+  if(!country) return;
+  const name = document.getElementById('cityFieldName').value.trim();
+  if(!name){ alert('Please add a city name.'); return; }
+  country.cities.push({ id: Date.now().toString(), name, notes: document.getElementById('cityFieldNotes').value.trim(), photos: [] });
+  persistAtlas();
+  closeCityModal();
+  renderAtlas();
+}
+function deleteCity(id){
+  const country = atlas.find(c => c.id === atlasCountryId);
+  if(!country) return;
+  const city = country.cities.find(x => x.id === id);
+  if(!city) return;
+  if(!confirm(`Delete ${city.name} and its ${city.photos.length} pinned photo(s)?`)) return;
+  country.cities = country.cities.filter(x => x.id !== id);
+  persistAtlas();
+  renderAtlas();
+}
+function enterCity(id){ atlasCityId = id; renderAtlas(); }
+
+/* --- Level 3: pinboard --- */
+function renderPinboardView(el){
+  const country = atlas.find(c => c.id === atlasCountryId);
+  const city = country && country.cities.find(x => x.id === atlasCityId);
+  if(!country || !city){ atlasCityId = null; renderAtlas(); return; }
+  el.innerHTML = `
+    <div class="atlas-crumbs">
+      <span class="crumb-link" onclick="atlasCountryId=null; atlasCityId=null; renderAtlas();">Countries</span> /
+      <span class="crumb-link" onclick="atlasCityId=null; renderAtlas();">${escapeHtml(country.name)}</span> /
+      <span class="crumb-current">${escapeHtml(city.name)}</span>
+    </div>
+    <div class="atlas-header">
+      <div>
+        <h2>${escapeHtml(city.name)}</h2>
+        <span class="sub">${city.photos.length} photo${city.photos.length===1?'':'s'} pinned</span>
+      </div>
+      <button class="atlas-add-btn" onclick="openPinModal()">+ Pin a Photo</button>
+    </div>
+    ${city.notes ? `<p style="font-size:13px;color:var(--wood);margin:-14px 0 24px;font-style:italic;">${escapeHtml(city.notes)}</p>` : ''}
+    <div class="pinboard">
+      ${city.photos.length === 0 ? `<div class="pinboard-empty">Nothing pinned here yet.</div>` : city.photos.map(p => `
+        <div class="pin-photo" style="transform:rotate(${jitter(p.id,20)}deg);">
+          <button class="pin-del" onclick="deletePin('${p.id}')" title="Remove">&times;</button>
+          <img src="${p.cover}" />
+          ${p.caption ? `<span class="pin-caption">${escapeHtml(p.caption)}</span>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+let pinCover = '';
+function openPinModal(){
+  pinCover = '';
+  document.getElementById('pinFieldCaption').value = '';
+  document.getElementById('pinPreview').style.display = 'none';
+  document.getElementById('pinSaveBtn').disabled = true;
+  document.getElementById('pinOverlay').classList.add('open');
+}
+function closePinModal(){ document.getElementById('pinOverlay').classList.remove('open'); }
+async function handlePinUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const preview = document.getElementById('pinPreview');
+  preview.style.display = 'block';
+  preview.innerHTML = `<div class="loading-txt">Processing photo...</div>`;
+  try{
+    pinCover = await resizeImage(file, 1000, 0.82);
+    preview.innerHTML = `<img src="${pinCover}" style="max-width:120px;border-radius:3px;display:block;margin-top:8px;"/>`;
+    document.getElementById('pinSaveBtn').disabled = false;
+  }catch(err){
+    preview.innerHTML = `<div class="loading-txt">Could not process that photo — try a different file.</div>`;
+  }
+}
+function savePin(){
+  const country = atlas.find(c => c.id === atlasCountryId);
+  const city = country && country.cities.find(x => x.id === atlasCityId);
+  if(!city || !pinCover) return;
+  city.photos.push({ id: Date.now().toString(), cover: pinCover, caption: document.getElementById('pinFieldCaption').value.trim() });
+  persistAtlas();
+  closePinModal();
+  renderAtlas();
+}
+function deletePin(id){
+  const country = atlas.find(c => c.id === atlasCountryId);
+  const city = country && country.cities.find(x => x.id === atlasCityId);
+  if(!city) return;
+  if(!confirm('Remove this photo?')) return;
+  city.photos = city.photos.filter(p => p.id !== id);
+  persistAtlas();
+  renderAtlas();
+}
+
 initNightMode();
 loadGoals();
+loadAtlas();
 loadEntries();
 
 /* ---------- Share cards ---------- */
